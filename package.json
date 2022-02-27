@@ -10,7 +10,7 @@
   "scripts": {
     "build": "npm run build:server && npm run build:client && npm run build:ng-inject",
     "build:server": "cd ./nestifo-api && npm run build",
-    "build:client": "cd ./nestifo-app && npm run build:ssr",
+    "build:client": "cd ./nestifo-app && npm run build",
     "build:ng-inject": "copy-files-from-to --config copy-files-from-to.json",
     "lint": "npm run lint:server && npm run lint:client",
     "lint:server": "cd ./nestifo-api && npm run lint:fix",

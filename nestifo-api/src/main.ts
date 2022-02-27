@@ -6,6 +6,7 @@ import { NgUniversalFilter } from './app.filter';
 import { AppModule } from './app.module';
 import { INestApplication, Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as path from 'path';
 
 const expressApp = express();
 
@@ -37,11 +38,13 @@ async function bootstrap() {
 }
 
 bootstrap().then(() => {
-  const backup = console.log;
-  console.log = logger.log.bind(logger);
-  ngUniversalSetup(expressApp);
-  console.log = backup;
+  expressApp.get('*/index.html', (req, res) => {
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+  });
 
+  expressApp.use(express.static(path.join(__dirname, 'public'), { index: false, maxAge: 31557600 }));
+  
   const port = process.env.PORT || 3000;
   expressApp.listen(port, () => {
     logger.log(`Server started on ${port} port`);
