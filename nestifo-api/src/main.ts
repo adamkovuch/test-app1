@@ -38,13 +38,6 @@ async function bootstrap() {
 }
 
 bootstrap().then(() => {
-  expressApp.get('*/index.html', (req, res) => {
-    res.setHeader('Cache-Control', 'public, max-age=86400');
-    res.sendFile(path.join(__dirname, 'public/index.html'));
-  });
-
-  expressApp.use(express.static(path.join(__dirname, 'public'), { index: false, maxAge: 31557600 }));
-  
   const port = process.env.PORT || 3000;
   expressApp.listen(port, () => {
     logger.log(`Server started on ${port} port`);
