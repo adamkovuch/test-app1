@@ -1,0 +1,15 @@
+{
+    "copyFiles": [
+        {
+            "from": "nestifo-app/dist/nestifo-app/server/main.js",
+            "to": "nestifo-api/dist/ng-universal.js"
+        },
+        {
+            "from": "nestifo-app/dist/nestifo-app/browser/**",
+            "to": "nestifo-api/public"
+        }
+    ],
+    "copyFilesSettings": {
+        "whenFileExists": "overwrite"
+    }
+}

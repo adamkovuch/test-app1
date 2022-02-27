@@ -1,0 +1,29 @@
+{
+  "name": "nestifo",
+  "version": "1.0.0",
+  "description": "Fullstack app",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run build:server && npm run build:client && npm run build:ng-inject",
+    "build:server": "cd ./nestifo-api && npm run build",
+    "build:client": "cd ./nestifo-app && npm run build:ssr",
+    "build:ng-inject": "copy-files-from-to --config copy-files-from-to.json",
+    "lint": "npm run lint:server && npm run lint:client",
+    "lint:server": "cd ./nestifo-api && npm run lint:fix",
+    "lint:client": "cd ./nestifo-app && npm run lint:fix",
+    "postinstall": "cd ./nestifo-api && npm install && cd ../nestifo-app && npm install",
+    "start": "cd ./nestifo-api && npm run start",
+    "test": "npm run test:server && npm run test:client",
+    "test:server": "cd ./nestifo-api && npm run test",
+    "test:client": "cd ./nestifo-app && npm run test"
+  },
+  "author": "adamkovuch@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "copy-files-from-to": "^3.2.1",
+    "passport": "^0.5.0"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
+  }
+}

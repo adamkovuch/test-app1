@@ -1,0 +1,23 @@
+<input type="text" [(ngModel)]="target" />
+<button (click)="attack()">Attack</button>
+<button (click)="stop()">Stop</button>
+
+<h1>Registred bots</h1>
+<table>
+  <tr>
+    <th>Bot</th>
+    <th>Status</th>
+    <td>Target</td>
+    <th>Loop</th>
+    <th>Success</th>
+    <th>Error</th>
+  </tr>
+  <tr *ngFor="let bot of botList">
+    <td>{{bot.url}}</td>
+    <td>{{bot.status}}</td>
+    <td>{{bot.target}}</td>
+    <td>{{bot.loop}}</td>
+    <td>{{bot.success}}</td>
+    <td>{{bot.error}}</td>
+  </tr>
+</table>
