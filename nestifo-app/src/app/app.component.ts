@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { catchError, interval, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { catchError, interval, map, of, Subject, switchMap, takeUntil, tap, timeout } from 'rxjs';
 import { AppService, BotInfo } from './app.service';
 
 @Component({
@@ -47,48 +47,46 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private addBot(botUrl: string) {
-    this.appService.getBotInfo(botUrl).pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(info => {
-      this.botList.push(info ? {...info, status: 'working', url: botUrl } : {loop: 0, success: 0, error: 0, target: null, url: botUrl, status: 'idle'});
-      this.startUpdateInterval(botUrl);
-    });
+    this.onBotUpdate(botUrl);
+    this.botList.push({url: botUrl, status: 'offline', loop: 0, error: 0, success: 0, target: null});
+    this.startUpdateInterval(botUrl);
   }
 
   private startUpdateInterval(botUrl: string) {
     interval(3000).pipe(
-      switchMap(() => this.appService.getBotInfo(botUrl)),
-      tap(() => {
-        const bot = this.botList.find(x => x.url === botUrl);
-        if(bot) {
-          bot.status = 'idle';
-        }
-      }),
-      catchError((err) => {
-        const bot = this.botList.find(x => x.url === botUrl);
-        if(bot) {
-          bot.status = 'offline';
-        }
-        this.startUpdateInterval(botUrl);
-        return of(null);
+      takeUntil(this.destroyed$),
+    ).subscribe(() => this.onBotUpdate(botUrl));
+  }
+
+  private onBotUpdate(botUrl: string) {
+    this.appService.getBotInfo(botUrl).pipe(
+      timeout(2500),
+      map(info => ({success: true, info})),
+      catchError(() => {
+        //this.startUpdateInterval(botUrl);
+        return of({success: false, info: null});
       }),
       takeUntil(this.destroyed$),
-    ).subscribe(info => {
+    ).subscribe(data => {
       const bot = this.botList.find(x => x.url === botUrl);
       if(!bot) {
         return;
       }
 
-      if(info) {
-        bot.error = info.error;
-        bot.success = info.success;
-        bot.loop = info.loop;
-        bot.target = info.target;
+      bot.error = 0;
+      bot.success = 0;
+      bot.loop = 0;
+      bot.target = null;
+
+      if(data.success) {
+        const info = data.info as BotInfo || {};
+        bot.error = info.error || 0;
+        bot.success = info.success || 0;
+        bot.loop = info.loop || 0;
+        bot.target = info.target || null;
+        bot.status = info.target ? 'working' : 'idle';
       } else {
-        bot.error = 0;
-        bot.loop = 0;
-        bot.success = 0;
-        bot.target = null;
+        bot.status = 'offline';
       }
     });
   }

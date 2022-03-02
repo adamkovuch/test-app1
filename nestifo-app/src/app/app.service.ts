@@ -8,7 +8,7 @@ export interface BotInfo {
   loop: number;
   success: number;
   error: number;
-  status: 'working' | 'idle' | 'offline'
+  status: 'working' | 'idle' | 'offline',
 }
 
 export interface AttackInfo {
@@ -33,10 +33,10 @@ export class AppService {
   }
 
   attack(bots: BotInfo[], info: AttackInfo) {
-    return forkJoin(bots.map(x => this.httpClient.post(`${x.url}attack`, info)));
+    return forkJoin(bots.map(x => this.httpClient.post(`${x.url}attack`, info, {responseType: 'text'})));
   }
 
   stop(bots: BotInfo[]) {
-    return forkJoin(bots.map(x => this.httpClient.delete(`${x.url}attack`)));
+    return forkJoin(bots.map(x => this.httpClient.delete(`${x.url}attack`, {responseType: 'text'})));
   }
 }
