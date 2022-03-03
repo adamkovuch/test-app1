@@ -13,9 +13,9 @@
     <th>Error</th>
   </tr>
   <tr *ngFor="let bot of botList">
-    <td>{{bot.url}}</td>
+    <td>{{bot.botUrl}}</td>
     <td>{{bot.status}}</td>
-    <td>{{bot.target}}</td>
+    <td>{{bot.target?.url}}</td>
     <td>{{bot.loop}}</td>
     <td>{{bot.success}}</td>
     <td>{{bot.error}}</td>

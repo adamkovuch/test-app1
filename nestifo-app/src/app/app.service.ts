@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 
 export interface BotInfo {
-  url: string;
-  target: string | null;
+  botUrl: string;
+  target: AttackInfo | null;
   loop: number;
   success: number;
   error: number;
@@ -12,7 +12,7 @@ export interface BotInfo {
 }
 
 export interface AttackInfo {
-  target: string;
+  url: string;
   concurrency?: number;
   interval?: number;
 }
@@ -23,20 +23,15 @@ export interface AttackInfo {
 export class AppService {
   constructor(private httpClient: HttpClient) { }
 
-  getBotList(): Observable<string[]> {
-    return this.httpClient.get<string[]>('/api/control');
-    //return of(['http://localhost:8080/'])
+  getBots(): Observable<BotInfo[]> {
+    return this.httpClient.get<BotInfo[]>('/api/control');
   }
 
-  getBotInfo(url: string): Observable<BotInfo> {
-    return this.httpClient.get<BotInfo>(url);
+  attack(info: AttackInfo) {
+    return this.httpClient.post<BotInfo>('/api/control/attack', {...info});
   }
 
-  attack(bots: BotInfo[], info: AttackInfo) {
-    return forkJoin(bots.map(x => this.httpClient.post(`${x.url}attack`, info, {responseType: 'text'})));
-  }
-
-  stop(bots: BotInfo[]) {
-    return forkJoin(bots.map(x => this.httpClient.delete(`${x.url}attack`, {responseType: 'text'})));
+  stop() {
+    return this.httpClient.delete('/api/control/attack');
   }
 }

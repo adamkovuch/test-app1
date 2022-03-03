@@ -1,10 +1,9 @@
 import { NestApplication, NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import * as express from 'express';
-import { ngUniversalSetup } from './ng-universal';
 import { NgUniversalFilter } from './app.filter';
 import { AppModule } from './app.module';
-import { INestApplication, Logger } from '@nestjs/common';
+import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as path from 'path';
 
@@ -26,6 +25,7 @@ function initSwagger(app: INestApplication) {
 
 function initApp(app: INestApplication) {
   app.setGlobalPrefix('/api');
+  app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new NgUniversalFilter());
 }
 
