@@ -5,6 +5,7 @@
 <h1>Registred bots</h1>
 <table border="1">
   <tr>
+    <th>#</th>
     <th>Bot</th>
     <th>Status</th>
     <th>Target</th>
@@ -12,7 +13,8 @@
     <th>Success</th>
     <th>Error</th>
   </tr>
-  <tr *ngFor="let bot of botList">
+  <tr *ngFor="let bot of botList; let index=index">
+    <td>{{index + 1}}</td>
     <td>{{bot.botUrl}}</td>
     <td>{{bot.status}}</td>
     <td>{{bot.target?.url}}</td>
