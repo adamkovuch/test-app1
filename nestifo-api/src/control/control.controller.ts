@@ -13,8 +13,10 @@ export class ControlController {
     }
 
     @Post('register')
-    updateBot(@Body() botInfo: BotInfo) {
-        return this.controlService.updateBot(botInfo.botUrl, botInfo.loop, botInfo.success, botInfo.error);
+    async updateBot(@Body() botInfo: BotInfo) {
+        return await new Promise((resolve)=> {
+            resolve(this.controlService.updateBot(botInfo.botUrl, botInfo.loop, botInfo.success, botInfo.error));
+        });
     }
 
     @Post('attack')
