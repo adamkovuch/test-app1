@@ -16,6 +16,7 @@ interface ControlBotInfo {
 
 @Injectable()
 export class ControlService {
+    private readonly updateTimeout = 20000;
     private _bots: ControlBotInfo[] = [];
     
     get bots() { return this._bots.map(x=>this.convertBotInfo(x)); }
@@ -40,7 +41,7 @@ export class ControlService {
             clearInterval(bot._intervalHandle);
         }
 
-        bot._intervalHandle = setInterval(() => this.onBotDisconnect(bot), 10000);
+        bot._intervalHandle = setInterval(() => this.onBotDisconnect(bot), this.updateTimeout);
 
         return this.convertBotInfo(bot);
     }
