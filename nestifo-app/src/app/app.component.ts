@@ -9,7 +9,8 @@ import { AppService, BotInfo } from './app.service';
 })
 export class AppComponent implements OnInit, OnDestroy {
   botList: BotInfo[] = [];
-  target: string = '';
+  host: string = '';
+  port: number = 0;
   
   private destroyed$ = new Subject<void>();
 
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   attack() {
-    this.appService.attack({url: this.target}).pipe(takeUntil(this.destroyed$)).subscribe();
+    this.appService.attack({host: this.host, port: this.port}).pipe(takeUntil(this.destroyed$)).subscribe();
   }
 
   stop() {

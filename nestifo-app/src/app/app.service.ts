@@ -12,7 +12,8 @@ export interface BotInfo {
 }
 
 export interface AttackInfo {
-  url: string;
+  host: string;
+  port: number;
   concurrency?: number;
   interval?: number;
 }

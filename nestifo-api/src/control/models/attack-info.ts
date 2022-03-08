@@ -2,7 +2,10 @@ import { IsNotEmpty, IsOptional } from "class-validator";
 
 export class AttackInfo {
     @IsNotEmpty()
-    url: string;
+    host: string;
+
+    @IsNotEmpty()
+    port: number;
   
     @IsOptional()
     concurrency?: string;

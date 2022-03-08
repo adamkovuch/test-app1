@@ -1,4 +1,7 @@
-<input type="text" [(ngModel)]="target" />
+<div>
+  HOST: <input type="text" [(ngModel)]="host" />
+  PORT: <input type="number" [(ngModel)]="port" />
+</div>
 <button (click)="attack()">Attack</button>
 <button (click)="stop()">Stop</button>
 
@@ -17,7 +20,7 @@
     <td>{{index + 1}}</td>
     <td>{{bot.botUrl}}</td>
     <td>{{bot.status}}</td>
-    <td>{{bot.target?.url}}</td>
+    <td>{{bot.target?.host}}:{{bot.target?.port}}</td>
     <td>{{bot.loop}}</td>
     <td>{{bot.success}}</td>
     <td>{{bot.error}}</td>
