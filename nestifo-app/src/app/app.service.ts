@@ -47,6 +47,12 @@ export class Bot {
     this.success = data.success;
     this.error = data.error;
     this.target = data.target;
+
+    if(this.target) {
+      this.status = 'working';
+    } else {
+      this.status = 'idle';
+    }
   }
 }
 
