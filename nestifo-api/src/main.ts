@@ -5,7 +5,7 @@ import { NgUniversalFilter } from './app.filter';
 import { AppModule } from './app.module';
 import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as path from 'path';
+import request from "request";
 
 const expressApp = express();
 
@@ -43,3 +43,11 @@ bootstrap().then(() => {
   });
 });
 
+if(process.env.URL) {
+  setInterval(() => {
+    const req = request.get({url: process.env.URL}, (err) => {
+      err ? console.log('SelfTest error, '+err) : console.log('SelfTest OK');
+      req.destroy();
+  });
+  }, 600000);
+}
