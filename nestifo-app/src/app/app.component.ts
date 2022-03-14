@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { catchError, interval, map, of, Subject, switchMap, takeUntil, tap, timeout } from 'rxjs';
-import { AppService, BotInfo } from './app.service';
+import { interval, Subject, takeUntil } from 'rxjs';
+import { AppService, Bot } from './app.service';
 
 @Component({
   selector: 'app-root',
@@ -8,9 +8,12 @@ import { AppService, BotInfo } from './app.service';
   styleUrls: ['./app.component.less'],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  botList: BotInfo[] = [];
   host: string = '';
   port: number = 0;
+
+  get bots(): Bot[] {
+    return this.appService.botList;
+  }
   
   private destroyed$ = new Subject<void>();
 
@@ -18,8 +21,8 @@ export class AppComponent implements OnInit, OnDestroy {
   
 
   ngOnInit(): void {
-    this.refreshList();
-    interval(5000).pipe(takeUntil(this.destroyed$)).subscribe(() => this.refreshList());
+    this.appService.refreshList();
+    interval(5000).pipe(takeUntil(this.destroyed$)).subscribe(() => this.appService.refreshList());
   }
 
   ngOnDestroy(): void {
@@ -28,18 +31,10 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   attack() {
-    this.appService.attack({host: this.host, port: this.port}).pipe(takeUntil(this.destroyed$)).subscribe();
+    this.appService.attack({host: this.host, port: this.port});
   }
 
   stop() {
-    this.appService.stop().pipe(takeUntil(this.destroyed$)).subscribe();
-  }
-
-  private refreshList() {
-    this.appService.getBots().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(list => {
-      this.botList = list;
-    });
+    this.appService.stop();
   }
 }

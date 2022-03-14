@@ -1,31 +1,18 @@
 import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
-import { ControlService } from './control.service';
-import { AttackInfo } from './models/attack-info';
-import { BotInfo } from './models/bot-info';
+
+const botUrls: string[] = [];
 
 @Controller('control')
 export class ControlController {
-    constructor(private controlService: ControlService) {}
-
     @Get()
     getBots() {
-        return this.controlService.bots;
+        return botUrls;
     }
 
     @Post('register')
-    async updateBot(@Body() botInfo: BotInfo) {
-        return await new Promise((resolve)=> {
-            resolve(this.controlService.updateBot(botInfo.botUrl, botInfo.loop, botInfo.success, botInfo.error));
-        });
-    }
-
-    @Post('attack')
-    attack(@Body() target: AttackInfo) {
-        this.controlService.attack(target);
-    }
-
-    @Delete('attack')
-    stop() {
-        this.controlService.stop();
+    register(@Body('botUrl') botUrl: string) {
+        if(!botUrls.includes(botUrl)) {
+            botUrls.push(botUrl);
+        }
     }
 }

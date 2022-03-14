@@ -25,7 +25,6 @@ function initSwagger(app: INestApplication) {
 
 function initApp(app: INestApplication) {
   app.setGlobalPrefix('/api');
-  app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new NgUniversalFilter());
 }
 
