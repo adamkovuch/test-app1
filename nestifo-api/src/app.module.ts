@@ -3,9 +3,7 @@ import { ControlModule } from './control/control.module';
 import { PingController } from './shared/controllers/ping/ping.controller';
 
 @Module({
-  imports: [
-    ControlModule
-  ],
+  imports: [ControlModule],
   controllers: [PingController],
 })
-export class AppModule { }
+export class AppModule {}

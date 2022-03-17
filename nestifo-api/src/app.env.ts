@@ -1,3 +1,1 @@
-export const AppEnv = {
-
-}
+export const AppEnv = {};

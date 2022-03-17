@@ -1,9 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { first, map, Observable, tap } from 'rxjs';
+import { first, interval, map, Observable, Subject, takeUntil, tap } from 'rxjs';
+
+export type UpdateNotifierSendInfoType = 'stats' | 'pingResponse';
+
+export interface UpdateNotifierSendInfo {
+    type: UpdateNotifierSendInfoType;
+    data?: any;
+}
 
 export class Bot {
   private socket: WebSocket;
+  private readonly destroyed$ = new Subject<void>();
+  private readonly pingInterval = 20000;
 
   loop: number;
   success: number;
@@ -23,7 +32,14 @@ export class Bot {
     this.socket = new WebSocket(wshost);
     this.socket.onclose = () => this.status = 'offline';
     this.socket.onmessage = (ev) => this.onMessage(ev.data ? JSON.parse(ev.data) : null);
-    this.socket.onopen = () => console.log('Client connected');
+    this.socket.onopen = () => this.onConnect();
+
+    this.destroyed$.pipe(
+      first()
+    ).subscribe(() => {
+      this.socket.removeAllListeners?.();
+      this.socket.close();
+    });
   }
 
   attack(info: AttackInfo) {
@@ -42,7 +58,20 @@ export class Bot {
     }
   }
 
-  private onMessage(data: any) {
+  destroy() {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+
+  private onMessage(info: UpdateNotifierSendInfo) {
+    switch(info.type) {
+      case 'stats':
+        this.onStatsUpdate(info.data);
+        break;
+    }
+  }
+
+  private onStatsUpdate(data: any) {
     this.loop = data.loop;
     this.success = data.success;
     this.error = data.error;
@@ -53,6 +82,16 @@ export class Bot {
     } else {
       this.status = 'idle';
     }
+  }
+
+  private onConnect() {
+    console.log('Client connected');
+
+    interval(this.pingInterval).pipe(
+      takeUntil(this.destroyed$),
+    ).subscribe(() => {
+      this.socket.send(JSON.stringify({cmd: 'ping'}));
+    })
   }
 }
 
