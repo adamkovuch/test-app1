@@ -9,6 +9,8 @@ export function ngUniversalSetup(server: express.Express): express.Express {
 export function handleStaticFileRequest(
   req: express.Request,
   res: express.Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  next: express.NextFunction,
 ) {
   res.sendFile(path.join(__dirname, '../public/', req.path));
 }
