@@ -11,7 +11,7 @@ export class ControlController {
 
   @Post('register')
   register(@Body('botUrl') botUrl: string) {
-    if (!botUrls.includes(botUrl)) {
+    if (botUrl && !botUrls.includes(botUrl)) {
       botUrls.push(botUrl);
     }
   }
